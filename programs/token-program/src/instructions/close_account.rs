@@ -8,6 +8,7 @@ pub struct CloseTokenAccount<'info>{
     #[account(mut)]
     pub token_account: Account<'info,TokenAccount>,
     #[account(mut)]
+     /// CHECK: This account can be any account that will receive the rent
     pub destination: UncheckedAccount<'info>,
     pub token_program: Program<'info,Token>
 }

@@ -8,6 +8,7 @@ pub struct ApproveDelegate<'info>{
     #[account(mut)]
     pub authority: Signer<'info>,
     pub token_program: Program<'info,Token>,
+    /// CHECK: This can be any account (program, user, etc.)
     pub delegate : UncheckedAccount<'info>
 }
 
