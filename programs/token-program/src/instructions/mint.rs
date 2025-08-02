@@ -1,6 +1,6 @@
 use anchor_lang::prelude::*;
 use anchor_spl::{
-    token_interface::{self,Mint,MintTo,TokenAccount,TokenInterface},
+    token::{self,MintTo,TokenAccount,Token,Mint},
 };
 
 #[derive(Accounts)]
@@ -8,10 +8,10 @@ pub struct MintTokens<'info>{
     #[account(mut)]
     pub signer : Signer<'info>,
     #[account(mut)]
-    pub mint: InterfaceAccount<'info,Mint>,
+    pub mint: Account<'info,Mint>,
     #[account(mut, constraint = token_account.mint == mint.key() @ MintError::InvalidTokenAccount)]
-    pub token_account: InterfaceAccount<'info,TokenAccount>,
-    pub token_program: Interface<'info,TokenInterface>
+    pub token_account: Account<'info,TokenAccount>,
+    pub token_program: Program<'info,Token>
 }
 
 pub fn mint_tokens(ctx: Context<MintTokens>, amount:u64) -> Result<()>{
@@ -30,7 +30,7 @@ pub fn mint_tokens(ctx: Context<MintTokens>, amount:u64) -> Result<()>{
 
     let cpi_program = ctx.accounts.token_program.to_account_info();
     let cpi_context = CpiContext::new(cpi_program,cpi_accounts);
-    token_interface::mint_to(cpi_context,amount)?;
+    token::mint_to(cpi_context,amount)?;
     Ok(())
 }
 

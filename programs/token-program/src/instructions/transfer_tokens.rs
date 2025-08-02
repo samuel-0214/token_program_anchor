@@ -1,17 +1,17 @@
 use anchor_lang::prelude::*;
-use anchor_spl::token_interface::{self, TokenInterface, TransferChecked,Mint,TokenAccount};
+use anchor_spl::{token::{self,Mint, TokenAccount, Token, TransferChecked}};
 
 #[derive(Accounts)]
 pub struct TransferTokens<'info>{
     #[account(mut)]
     pub signer : Signer<'info>,
     #[account(mut)]
-    pub mint: InterfaceAccount<'info,Mint>,
+    pub mint: Account<'info,Mint>,
     #[account(mut)]
-    pub sender_token_account: InterfaceAccount<'info,TokenAccount>,
+    pub sender_token_account: Account<'info,TokenAccount>,
     #[account(mut)]
-    pub receiver_token_account: InterfaceAccount<'info,TokenAccount>,
-    pub token_program: Interface<'info,TokenInterface>
+    pub receiver_token_account: Account<'info,TokenAccount>,
+    pub token_program: Program<'info,Token>
 }
 
 pub fn transfer_tokens(ctx:Context<TransferTokens>,amount:u64) -> Result<()>{
@@ -29,6 +29,6 @@ pub fn transfer_tokens(ctx:Context<TransferTokens>,amount:u64) -> Result<()>{
 
     let cpi_context = CpiContext::new(cpi_program,cpi_accounts);
 
-    token_interface::transfer_checked(cpi_context,amount, decimals)?;
+    token::transfer_checked(cpi_context,amount, decimals)?;
     Ok(())
 }

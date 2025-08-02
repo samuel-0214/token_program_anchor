@@ -1,5 +1,5 @@
 use anchor_lang::prelude::*;
-use anchor_spl::token_interface::{Mint, TokenAccount, TokenInterface};
+use anchor_spl::token::{Mint, TokenAccount, Token};
 
 #[derive(Accounts)]
 pub struct CreateTokenAccount<'info>{
@@ -12,9 +12,9 @@ pub struct CreateTokenAccount<'info>{
         token::mint = mint, 
         token::authority = signer,
     )]
-    pub token_account: InterfaceAccount<'info,TokenAccount>,
-    pub mint : InterfaceAccount<'info,Mint>,
-    pub token_program: Interface<'info,TokenInterface>,
+    pub token_account: Account<'info,TokenAccount>,
+    pub mint : Account<'info,Mint>,
+    pub token_program: Program<'info,Token>,
     pub system_program: Program<'info,System>,
 }
 

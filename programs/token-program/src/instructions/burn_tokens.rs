@@ -1,15 +1,15 @@
 use anchor_lang::prelude::*;
-use anchor_spl::token_interface::{self,Burn,TokenAccount,TokenInterface,Mint};
+use anchor_spl::token::{self,Burn,TokenAccount,Token,Mint};
 
 #[derive(Accounts)]
 pub struct BurnTokens<'info>{
     #[account(mut)]
-    pub token_account: InterfaceAccount<'info,TokenAccount>,
+    pub token_account: Account<'info,TokenAccount>,
     #[account(mut)]
     pub signer : Signer<'info>,
     #[account(mut)]
-    pub mint: InterfaceAccount<'info,Mint>,
-    pub token_program: Interface<'info,TokenInterface>,
+    pub mint: Account<'info,Mint>,
+    pub token_program: Program<'info,Token>,
 }
 
 pub fn burn_tokens(ctx:Context<BurnTokens>,amount:u64)->Result<()>{
@@ -22,7 +22,7 @@ pub fn burn_tokens(ctx:Context<BurnTokens>,amount:u64)->Result<()>{
 
     let cpi_program = ctx.accounts.token_program.to_account_info();
     let cpi_context = CpiContext::new(cpi_program,cpi_accounts);
-    token_interface::burn(cpi_context,amount)?;
+    token::burn(cpi_context,amount)?;
 
      msg!("Burned {} tokens successfully! Total supply reduced.", amount);
     Ok(())

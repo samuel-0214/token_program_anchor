@@ -1,15 +1,14 @@
 use anchor_lang::prelude::*;
-use anchor_spl::token_interface::{self,TokenAccount,TokenInterface,Mint};
-use anchor_spl::token_2022::{FreezeAccount};
+use anchor_spl::token::{self, FreezeAccount, Mint, Token, TokenAccount};
 
 #[derive(Accounts)]
 pub struct FreezeTokenAccount<'info>{
     #[account(mut)]
-    pub token_account: InterfaceAccount<'info,TokenAccount>,
+    pub token_account: Account<'info,TokenAccount>,
     pub freeze_authority: Signer<'info>,
     #[account(mut)]
-    pub mint: InterfaceAccount<'info,Mint>,
-    pub token_program: Interface<'info,TokenInterface>
+    pub mint: Account<'info,Mint>,
+    pub token_program: Program<'info,Token>
 }
 
 pub fn freeze(ctx:Context<FreezeTokenAccount>) -> Result<()>{
@@ -22,7 +21,7 @@ pub fn freeze(ctx:Context<FreezeTokenAccount>) -> Result<()>{
     let cpi_program = ctx.accounts.token_program.to_account_info();
     let cpi_context = CpiContext::new(cpi_program,cpi_accounts);
 
-    token_interface::freeze_account(cpi_context)?;
+    token::freeze_account(cpi_context)?;
     msg!("Token account frozen.");
     Ok(())
 }

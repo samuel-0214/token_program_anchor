@@ -1,15 +1,14 @@
 use anchor_lang::prelude::*;
-use anchor_spl::token_interface::{self, Mint,TokenAccount, TokenInterface};
-use anchor_spl::token_2022::{ThawAccount};
+use anchor_spl::token::{self, Mint,TokenAccount, Token, ThawAccount};
 
 #[derive(Accounts)]
 pub struct ThawTokenAccount<'info>{
     #[account(mut)]
-    pub token_account : InterfaceAccount<'info,TokenAccount>,
+    pub token_account : Account<'info,TokenAccount>,
     #[account(mut)]
-    pub mint: InterfaceAccount<'info,Mint>,
+    pub mint: Account<'info,Mint>,
     pub freeze_authority: Signer<'info>,
-    pub token_program: Interface<'info,TokenInterface>,
+    pub token_program: Program<'info,Token>,
 }
 
 pub fn thaw_token_account(ctx: Context<ThawTokenAccount>) -> Result<()>{
@@ -23,7 +22,11 @@ pub fn thaw_token_account(ctx: Context<ThawTokenAccount>) -> Result<()>{
 
     let cpi_context = CpiContext::new(cpi_program, cpi_accounts);
 
-    token_interface::thaw_account(cpi_context);
-    msg!("Account has been thawed");
+    token::thaw_account(cpi_context);
+    msg!(
+        "Token account {} has been thawed by freeze authority {}",
+        ctx.accounts.token_account.key(),
+        ctx.accounts.freeze_authority.key()
+    );
     Ok(())
 }

@@ -10,7 +10,7 @@ pub mod token_program {
     use super::*;
 
     pub fn initialization(ctx: Context<Initialize>) -> Result<()> {
-        instructions::initialize::handler(ctx)
+        instructions::handler(ctx)
     }
 
     pub fn initialize_mint(ctx: Context<InitializeMint>) -> Result<()>{
@@ -41,4 +41,16 @@ pub mod token_program {
         instructions::thaw_token_account(ctx)
     }
 
+    pub fn close_account(ctx: Context<CloseTokenAccount>) -> Result<()>{
+        instructions::close_token_account(ctx)
+    }
+
+    pub fn approve_delegate(ctx: Context<ApproveDelegate>,amount:u64) -> Result<()>{
+        instructions::approve_delegate(ctx, amount)
+    }
+
+    pub fn revoke_delegate(ctx: Context<RevokeDelegate>) -> Result<()>{
+        instructions::revoke_delegate(ctx)
+    }
+    
 }

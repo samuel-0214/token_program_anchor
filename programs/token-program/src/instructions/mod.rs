@@ -21,3 +21,12 @@ pub use freeze::*;
 
 pub mod thaw;
 pub use thaw::*;
+
+pub mod close_account;
+pub use close_account::*;
+
+pub mod approve_delegate;
+pub use approve_delegate::*;
+
+pub mod revoke_delegate;
+pub use revoke_delegate::*;
